@@ -12,3 +12,4 @@ C:\Users\quint\OneDrive - Hogeschool Rotterdam\Leerjaar 2\Sem 2\Data_Structures\
 C:\Users\quint\OneDrive - Hogeschool Rotterdam\Leerjaar 2\Sem 2\Data_Structures\Project 1\Project_1_Data_Structures_Algos\obj\Debug\net9.0\Project_1_Data_Structures_Algos.pdb
 C:\Users\quint\OneDrive - Hogeschool Rotterdam\Leerjaar 2\Sem 2\Data_Structures\Project 1\Project_1_Data_Structures_Algos\obj\Debug\net9.0\Project_1_Data_Structures_Algos.genruntimeconfig.cache
 C:\Users\quint\OneDrive - Hogeschool Rotterdam\Leerjaar 2\Sem 2\Data_Structures\Project 1\Project_1_Data_Structures_Algos\obj\Debug\net9.0\ref\Project_1_Data_Structures_Algos.dll
+C:\Users\quint\OneDrive - Hogeschool Rotterdam\Leerjaar 2\Sem 2\Data_Structures\Project 1\Project_1_Data_Structures_Algos\obj\Debug\net9.0\Project_1_Data_Structures_Algos.sourcelink.json
