@@ -9,7 +9,7 @@ public class MyCollection<T> : IMyCollection<T>
         if(_items == null)
         {
             _items = new T[4];
-            Count = 4;
+            Count = 0;
         }
         if (Count >= _items.Length)
         {
