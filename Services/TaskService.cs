@@ -9,20 +9,19 @@ public class TaskService : ITaskService
         _tasks = new MyCollection<TaskItem>();
     }
     public MyCollection<TaskItem> GetAllTasks() => _tasks;
-    public void AddTask(string description)
-    {
-        int newId = _tasks._count > 0 ? _tasks[_tasks._count - 1].Id + 1 :
-       1;
-        var newTask = new TaskItem
-        {
-            Id = newId,
-            Description =
-       description,
-            Completed = false
-        };
-        _tasks.Add(newTask);
-        // _repository.SaveTasks(_tasks);
-    }
+    // public void AddTask(string description)
+    // {
+    //     int newId = _tasks.Count > 0 ? _tasks[_tasks.Count - 1].Id + 1 : 1;
+    //     var newTask = new TaskItem
+    //     {
+    //         Id = newId,
+    //         Description =
+    //    description,
+    //         Completed = false
+    //     };
+    //     _tasks.Add(newTask);
+    //     _repository.SaveTasks(_tasks);
+    // }
     // public void RemoveTask(int id)
     // {
     //     var task = _tasks.Find(t => t.Id == id);
