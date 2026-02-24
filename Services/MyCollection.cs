@@ -36,7 +36,22 @@ public class MyCollection<T> : IMyCollection<T>
     {
         return default;
     }
-    public void Sort(Comparison<T> comparison) { }
+    public void Sort(Comparison<T> comparison)
+    {
+        for (int i = 1; i < Count; i++)
+        {
+            for (int j = 0; j < Count - 1; j++)
+            {
+                var tempOne = _items[j];
+                var tempTwo = _items[j + 1];
+                if (comparison(_items[j], _items[j + 1]) > 0)
+                {
+                    _items[j] = tempTwo;
+                    _items[j + 1] = tempOne;
+                }
+            }
+        }
+    }
     public R Reduce<R>(Func<R, T, R> accumulator)
     {
         return default;
