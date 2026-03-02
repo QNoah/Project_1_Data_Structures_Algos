@@ -8,10 +8,10 @@ public class MyCollection<T> : IMyCollection<T>
     {
         if (_items == null)
         {
-            _items = new T[4];
+            _items = new T[1];
             Count = 0;
         }
-        if (Count >= _items.Length) Array.Copy(_items, _items = new T[_items.Length * 2], Count);
+        if (Count >= _items.Length) Array.Copy(_items, _items = new T[_items.Length + 1], Count);
         _items[Count] = item;
         Count++;
     }
@@ -30,11 +30,20 @@ public class MyCollection<T> : IMyCollection<T>
     }
     public T FindBy<K>(K key, Func<T, K, bool> comparer)
     {
-        return default(T);
+        for (int i = 0; i < Count; i++)
+        {
+            if (comparer(_items[i], key)) return _items[i];
+        }
+        return default;
     }
     public IMyCollection<T> Filter(Func<T, bool> predicate)
     {
-        return default;
+        MyCollection<T> filtered = new MyCollection<T>();
+        for (int i = 0; i < Count; i++)
+        {
+            if (predicate(_items[i])) filtered.Add(_items[i]);
+        }
+        return filtered;
     }
     public void Sort(Comparison<T> comparison) { }
     public R Reduce<R>(Func<R, T, R> accumulator)

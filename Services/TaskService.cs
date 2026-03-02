@@ -31,13 +31,14 @@ public class TaskService : ITaskService
     //         _repository.SaveTasks(_tasks);
     //     }
     // }
-    // public void ToggleTaskCompletion(int id)
-    // {
-    //     var task = _tasks.Find(t => t.Id == id);
-    //     if (task != null)
-    //     {
-    //         task.Completed = !task.Completed;
-    //         _repository.SaveTasks(_tasks);
-    //     }
-    // }
+    public void ToggleTaskCompletion(int id)
+    {
+        var task = _tasks.Filter(t => t.Id == id);
+        if (task != null)
+        {
+            _tasks.FindBy(id, (t, key) => t.Id == key);
+            task.Completed = !task.Completed;
+            _repository.SaveTasks(_tasks);
+        }
+    }
 }

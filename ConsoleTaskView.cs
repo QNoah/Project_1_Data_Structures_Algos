@@ -21,7 +21,7 @@ public class ConsoleTaskView : ITaskView
     {
         while (true)
         {
-            // DisplayTasks(_service.GetAllTasks()); ------- Needs to get updated.
+            // DisplayTasks(_service.GetAllTasks());
             Console.WriteLine("\nOptions:");
             Console.WriteLine("1. Add Task");
             Console.WriteLine("2. Remove Task");
@@ -32,13 +32,13 @@ public class ConsoleTaskView : ITaskView
             {
                 case "1":
                     string description = Prompt("Enter task description: ");
-                    // _service.AddTask(description); ------- Needs to get updated.
+                    // _service.AddTask(description);
                     break;
                 case "2":
                     string removeIdStr = Prompt("Enter task id to remove: ");
                     if (int.TryParse(removeIdStr, out int removeId))
                     {
-                        // _service.RemoveTask(removeId); ------- Needs to get updated.
+                        // _service.RemoveTask(removeId);
                     }
                     break;
                 case "3":
