@@ -7,7 +7,7 @@ public class TaskService : ITaskService
     public TaskService(ITaskRepository repository)
     {
         _repository = repository;
-        // _tasks = _repository.LoadTasks();
+        _tasks = _repository.LoadTasks();
         _tasks = new MyCollection<TaskItem>();
     }
     public MyCollection<TaskItem> GetAllTasks() => _tasks;
