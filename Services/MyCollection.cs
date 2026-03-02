@@ -76,6 +76,6 @@ public class MyCollection<T> : IMyCollection<T>
     }
     public IEnumerator<T> GetEnumerator()
     {
-        return default;
+        for(int i = 0; i < Count; i++) yield return _items[i];
     } // Extra foreach lookup.
 }
