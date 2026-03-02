@@ -72,7 +72,7 @@ public class MyCollection<T> : IMyCollection<T>
     }
     public IMyIterator<T> GetIterator()
     {
-        return default;
+        return new MyIterator<T>(_items, Count);
     }
     public IEnumerator<T> GetEnumerator()
     {
