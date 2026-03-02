@@ -1,3 +1,5 @@
+using System.Reflection.Metadata.Ecma335;
+
 public class TaskService : ITaskService
 {
     private readonly ITaskRepository _repository;
@@ -33,12 +35,8 @@ public class TaskService : ITaskService
     // }
     public void ToggleTaskCompletion(int id)
     {
-        var task = _tasks.Filter(t => t.Id == id);
-        if (task != null)
-        {
-            _tasks.FindBy(id, (t, key) => t.Id == key);
-            task.Completed = !task.Completed;
-            _repository.SaveTasks(_tasks);
-        }
+        var task = _tasks.FindBy(id, (t, key) => t.Id == key);
+        if (task is not null) task.Completed = !task.Completed;
+            // _repository.SaveTasks(task); //update later
     }
 }
