@@ -24,15 +24,15 @@ public class TaskService : ITaskService
     //     _tasks.Add(newTask);
     //     _repository.SaveTasks(_tasks);
     // }
-    // public void RemoveTask(int id)
-    // {
-    //     var task = _tasks.Find(t => t.Id == id);
-    //     if (task != null)
-    //     {
-    //         _tasks.Remove(task);
-    //         _repository.SaveTasks(_tasks);
-    //     }
-    // }
+    public void RemoveTask(int id)
+    {
+        var task = _tasks.FindBy(id, (t, key) => t.Id == key);
+        if (task is not null)
+        {
+            _tasks.Remove(task);
+            _repository.SaveTasks(_tasks);
+        }
+    }
     public void ToggleTaskCompletion(int id)
     {
         var task = _tasks.FindBy(id, (t, key) => t.Id == key);
