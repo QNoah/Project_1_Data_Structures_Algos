@@ -1,19 +1,26 @@
 
 public class MyIterator<T> : IMyIterator<T>
 {
+    private readonly T[] _items;
+    private readonly int _count;
+    private int _currentIndex;
+    public MyIterator(T[] items, int count)
+    {
+        _items = items;
+        _count = count;
+        _currentIndex = 0;
+    }
     public bool HasNext()
     {
-        //temporary
-        return false;
+        return _currentIndex < _count;
     }
     public T Next()
     {
-        //temporary
-        return default;
+        _currentIndex++;
+        return _items[_currentIndex];
     }
     public void Reset()
     {
-        //temporary
-        return;
+        _currentIndex = 0;
     }
 }
