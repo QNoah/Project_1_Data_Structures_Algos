@@ -63,12 +63,25 @@ public class MyCollection<T> : IMyCollection<T>
     }
     public R Reduce<R>(Func<R, T, R> accumulator)
     {
-        return default;
+        if (Count == 0) return default;
+
+        R result = (R)(object)_items[0];
+        for (int i = 1; i < Count; i++)
+        {
+            result = accumulator(result, _items[i]);
+        }
+        return result;
     }
     // OR
     public R Reduce<R>(R initial, Func<R, T, R> accumulator)
     {
-        return default;
+        if (Count == 0) return initial;
+        R result = initial;
+        for (int i = 0; i < Count; i++)
+        {
+            result = accumulator(result, _items[i]);
+        }
+        return result;
     }
     public IMyIterator<T> GetIterator()
     {
@@ -76,6 +89,6 @@ public class MyCollection<T> : IMyCollection<T>
     }
     public IEnumerator<T> GetEnumerator()
     {
-        for(int i = 0; i < Count; i++) yield return _items[i];
+        for (int i = 0; i < Count; i++) yield return _items[i];
     } // Extra foreach lookup.
 }
