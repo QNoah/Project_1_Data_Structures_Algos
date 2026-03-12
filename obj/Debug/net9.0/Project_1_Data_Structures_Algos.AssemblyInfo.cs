@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Project_1_Data_Structures_Algos")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+557ba3c2a51f4883ee2af9f93d0b3abae2e186ce")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e7645728838bfe3c35cccc11ea9cc27ef8a03e0b")]
 [assembly: System.Reflection.AssemblyProductAttribute("Project_1_Data_Structures_Algos")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Project_1_Data_Structures_Algos")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
