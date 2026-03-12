@@ -5,18 +5,25 @@ public class ConsoleTaskView : ITaskView
     {
         _service = service;
     }
+
     void DisplayTasks(MyCollection<TaskItem> tasks)
     {
         Console.Clear();
         Console.WriteLine("==== ToDo List ====");
+        if (tasks.Count.Equals(0)) Console.WriteLine("No tasks.");
         foreach (var task in tasks)
-            Console.WriteLine($"{task}");
+        {
+            string status = task.Completed ? "Finished" : "To Do";
+            Console.WriteLine($"{task.Description} - {status}");
+        }
     }
+
     string Prompt(string prompt)
     {
         Console.Write(prompt);
         return Console.ReadLine();
     }
+
     public void Run()
     {
         while (true)

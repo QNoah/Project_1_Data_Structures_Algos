@@ -10,15 +10,19 @@ public class MyIterator<T> : IMyIterator<T>
         _count = count;
         _currentIndex = 0;
     }
+
     public bool HasNext()
     {
         return _currentIndex < _count;
     }
+
     public T Next()
     {
+        T item = _items[_currentIndex];
         _currentIndex++;
-        return _items[_currentIndex];
+        return item;
     }
+
     public void Reset()
     {
         _currentIndex = 0;
