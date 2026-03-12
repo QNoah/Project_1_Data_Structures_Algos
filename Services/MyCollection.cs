@@ -1,38 +1,57 @@
+using System.Text.Json.Serialization;
+
 public class MyCollection<T> : IMyCollection<T>
 {
-    private T[] _items { get; set; }
+    [JsonIgnore]
+    public T[] Items { get; set; }
+
+    public T[] Data
+    {
+        get
+        {
+            T[] result = new T[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                result[i] = Items[i];
+            }
+            return result;
+        }
+    }
+
     public int Count { get; set; }
     public bool Dirty { get; set; }
 
     public void Add(T item)
     {
-        if (_items == null)
+        if (Items == null)
         {
-            _items = new T[1];
+            Items = new T[1];
             Count = 0;
         }
-        if (Count >= _items.Length) Array.Copy(_items, _items = new T[_items.Length + 1], Count);
-        _items[Count] = item;
+        if (Count >= Items.Length) Array.Copy(Items, Items = new T[Items.Length + 1], Count);
+        Items[Count] = item;
         Count++;
     }
+
     public void Remove(T item)
     {
         for (int i = 0; i < Count; i++)
         {
-            if (_items[i].Equals(item))
+            if (Items[i].Equals(item))
             {
-                for (int j = i; j < Count - 1; j++) _items[j] = _items[j + 1];
+                for (int j = i; j < Count - 1; j++) Items[j] = Items[j + 1];
                 Count--;
-                _items[Count] = default;
+                Items[Count] = default;
                 break;
             }
         }
     }
+
     public T FindBy<K>(K key, Func<T, K, bool> comparer)
     {
         for (int i = 0; i < Count; i++)
         {
-            if (comparer(_items[i], key)) return _items[i];
+            if (comparer(Items[i], key)) return Items[i];
         }
         return default;
     }
@@ -41,7 +60,7 @@ public class MyCollection<T> : IMyCollection<T>
         MyCollection<T> filtered = new MyCollection<T>();
         for (int i = 0; i < Count; i++)
         {
-            if (predicate(_items[i])) filtered.Add(_items[i]);
+            if (predicate(Items[i])) filtered.Add(Items[i]);
         }
         return filtered;
     }
@@ -51,12 +70,12 @@ public class MyCollection<T> : IMyCollection<T>
         {
             for (int j = 0; j < Count - 1; j++)
             {
-                var tempOne = _items[j];
-                var tempTwo = _items[j + 1];
-                if (comparison(_items[j], _items[j + 1]) > 0)
+                var tempOne = Items[j];
+                var tempTwo = Items[j + 1];
+                if (comparison(Items[j], Items[j + 1]) > 0)
                 {
-                    _items[j] = tempTwo;
-                    _items[j + 1] = tempOne;
+                    Items[j] = tempTwo;
+                    Items[j + 1] = tempOne;
                 }
             }
         }
@@ -65,10 +84,10 @@ public class MyCollection<T> : IMyCollection<T>
     {
         if (Count == 0) return default;
 
-        R result = (R)(object)_items[0];
+        R result = (R)(object)Items[0];
         for (int i = 1; i < Count; i++)
         {
-            result = accumulator(result, _items[i]);
+            result = accumulator(result, Items[i]);
         }
         return result;
     }
@@ -79,16 +98,16 @@ public class MyCollection<T> : IMyCollection<T>
         R result = initial;
         for (int i = 0; i < Count; i++)
         {
-            result = accumulator(result, _items[i]);
+            result = accumulator(result, Items[i]);
         }
         return result;
     }
     public IMyIterator<T> GetIterator()
     {
-        return new MyIterator<T>(_items, Count);
+        return new MyIterator<T>(Items, Count);
     }
     public IEnumerator<T> GetEnumerator()
     {
-        for (int i = 0; i < Count; i++) yield return _items[i];
+        for (int i = 0; i < Count; i++) yield return Items[i];
     } // Extra foreach lookup.
 }
