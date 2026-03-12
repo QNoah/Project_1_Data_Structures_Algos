@@ -13,10 +13,10 @@ public class ConsoleTaskView : ITaskView
         if (tasks.Count.Equals(0)) Console.WriteLine("No tasks.");
         foreach (var task in tasks)
         {
-            Console.Write($"Id {task.Id}. {task.Description}. ");
+            Console.Write($"{task.Id}. {task.Description} ");
             Console.Write("[");
             if (task.Completed) Console.Write("X");
-            Console.Write("]");
+            Console.Write("]\n");
         }
     }
 
