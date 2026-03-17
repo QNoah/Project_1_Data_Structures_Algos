@@ -14,6 +14,8 @@ public class TaskService : ITaskService
 
     public MyCollection<TaskItem> GetAllTasks() => _tasks;
 
+    public TaskItem GetTaskById(int id) => _tasks.FindBy(id, (t, key) => t.Id == key);
+
     public void AddTask(string title, string description, TaskItem.TaskPriority priority)
     {
         int maxId = 0;

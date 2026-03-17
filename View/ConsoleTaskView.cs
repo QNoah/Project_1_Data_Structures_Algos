@@ -76,8 +76,9 @@ public class ConsoleTaskView : ITaskView
             Console.WriteLine("1. Add Task");
             Console.WriteLine("2. Remove Task");
             Console.WriteLine("3. Move Task");
-            Console.WriteLine("4. Filter");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("4. View Task");
+            Console.WriteLine("5. Filter");
+            Console.WriteLine("6. Exit");
             string option = Prompt("Select an option: ");
             switch (option)
             {
@@ -103,10 +104,17 @@ public class ConsoleTaskView : ITaskView
                     }
                     break;
                 case "4":
+                    string viewIdStr = Prompt("Enter task ID to view: ");
+                    if (int.TryParse(viewIdStr, out int viewId))
+                    {
+                        DisplayTaskView.ViewTask(viewId, _service);
+                    }
+                    break;
+                case "5":
                     MyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_service);
                     if (filteredTasks != null) _tasks = filteredTasks;
                     break;
-                case "5":
+                case "6":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press any key to continue...");
