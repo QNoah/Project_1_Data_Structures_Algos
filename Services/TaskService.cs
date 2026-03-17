@@ -54,4 +54,9 @@ public class TaskService : ITaskService
     //     if (task is not null) task.Completed = !task.Completed;
     //     _repository.SaveTasks(_tasks);
     // }
+
+    public MyCollection<TaskItem> ApplyFilter(Func<TaskItem, bool> predicate)
+    {
+        return _tasks.Filter(predicate);
+    }
 }

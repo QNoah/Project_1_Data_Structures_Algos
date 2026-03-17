@@ -3,14 +3,11 @@ public static class DisplayTaskView
     public static void DisplayTasks(MyCollection<TaskItem> tasks)
     {
         Console.Clear();
-        Console.WriteLine("==== ToDo List ====");
+        Console.WriteLine("========= ToDo List =========");
         if (tasks.Count.Equals(0)) Console.WriteLine("No tasks.");
         foreach (var task in tasks)
         {
-            Console.Write($"{task.Id}. {task.Description} ");
-            Console.Write("[");
-            if (task.Status == TaskItem.TaskStatus.Done) Console.Write("X");
-            Console.Write("]\n");
+            Console.Write($"[{task.Status}] {task.Id}. {task.Title} - {task.Priority}\n");
         }
     }
 }

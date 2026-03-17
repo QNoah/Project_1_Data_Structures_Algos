@@ -6,10 +6,12 @@ public class ConsoleTaskView : ITaskView
         _service = service;
     }
 
+    private MyCollection<TaskItem> _tasks;
+
     string Prompt(string prompt)
     {
         Console.Write(prompt);
-        return Console.ReadLine();
+        return Console.ReadLine()!;
     }
 
     TaskItem.TaskPriority AskPriority()
@@ -30,9 +32,9 @@ public class ConsoleTaskView : ITaskView
                 case "3":
                     return TaskItem.TaskPriority.P2;
                 default:
-                        Console.WriteLine("Invalid option. Press any key to continue...");
-                        Console.ReadKey();
-                        break;
+                    Console.WriteLine("Invalid option. Press any key to continue...");
+                    Console.ReadKey();
+                    break;
             }
         }
     }
@@ -41,12 +43,16 @@ public class ConsoleTaskView : ITaskView
     {
         while (true)
         {
-            DisplayTaskView.DisplayTasks(_service.GetAllTasks());
+            if (_tasks == null) _tasks = _service.GetAllTasks();
+            DisplayTaskView.DisplayTasks(_tasks);
+            _tasks = _service.GetAllTasks();
+
             Console.WriteLine("\nOptions:");
             Console.WriteLine("1. Add Task");
             Console.WriteLine("2. Remove Task");
             // Console.WriteLine("3. Toggle Task State");
-            Console.WriteLine("4. Exit");
+            Console.WriteLine("4. Filter");
+            Console.WriteLine("5. Exit");
             string option = Prompt("Select an option: ");
             switch (option)
             {
@@ -71,6 +77,10 @@ public class ConsoleTaskView : ITaskView
                 //     }
                 //     break;
                 case "4":
+                    MyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_service);
+                    if (filteredTasks != null) _tasks = filteredTasks;
+                    break;
+                case "5":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press any key to continue...");
