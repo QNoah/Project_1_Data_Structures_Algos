@@ -80,8 +80,8 @@ public static class FilterTasksView
         {
             Console.Clear();
             Console.WriteLine("Options:");
-            Console.WriteLine("1. ToDo");
-            Console.WriteLine("2. InProgress");
+            Console.WriteLine("1. To Do");
+            Console.WriteLine("2. In Progress");
             Console.WriteLine("3. Done");
 
             string input = Prompt("Select status: ");

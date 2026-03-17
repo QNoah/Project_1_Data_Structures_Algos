@@ -48,12 +48,12 @@ public class TaskService : ITaskService
         }
     }
 
-    // public void ToggleTaskCompletion(int id)
-    // {
-    //     var task = _tasks.FindBy(id, (t, key) => t.Id == key);
-    //     if (task is not null) task.Completed = !task.Completed;
-    //     _repository.SaveTasks(_tasks);
-    // }
+    public void MoveTask(int id, TaskItem.TaskStatus newStatus)
+    {
+        var task = _tasks.FindBy(id, (t, key) => t.Id == key);
+        if (task is not null) task.Status = newStatus;
+        _repository.SaveTasks(_tasks);
+    }
 
     public MyCollection<TaskItem> ApplyFilter(Func<TaskItem, bool> predicate)
     {

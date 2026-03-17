@@ -4,5 +4,5 @@ public interface ITaskService
     void AddTask(string title, string description, TaskItem.TaskPriority priority);
     void RemoveTask(int id);
     MyCollection<TaskItem> ApplyFilter(Func<TaskItem, bool> predicate);
-    // void ToggleTaskCompletion(int id);
+    void MoveTask(int id, TaskItem.TaskStatus newStatus);
 }
