@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 
 public class TaskService : ITaskService
@@ -13,7 +14,7 @@ public class TaskService : ITaskService
 
     public MyCollection<TaskItem> GetAllTasks() => _tasks;
 
-    public void AddTask(string description)
+    public void AddTask(string title, string description, TaskItem.TaskPriority priority)
     {
         int maxId = 0;
         var iterator = _tasks.GetIterator();
@@ -26,8 +27,11 @@ public class TaskService : ITaskService
         var newTask = new TaskItem
         {
             Id = maxId + 1,
+            Title = title,
             Description = description,
-            Completed = false
+            Priority = priority,
+            Status = TaskItem.TaskStatus.ToDo,
+            CreatedAt = DateTime.Now
         };
 
         _tasks.Add(newTask);
@@ -44,10 +48,15 @@ public class TaskService : ITaskService
         }
     }
 
-    public void ToggleTaskCompletion(int id)
+    // public void ToggleTaskCompletion(int id)
+    // {
+    //     var task = _tasks.FindBy(id, (t, key) => t.Id == key);
+    //     if (task is not null) task.Completed = !task.Completed;
+    //     _repository.SaveTasks(_tasks);
+    // }
+
+    public MyCollection<TaskItem> ApplyFilter(Func<TaskItem, bool> predicate)
     {
-        var task = _tasks.FindBy(id, (t, key) => t.Id == key);
-        if (task is not null) task.Completed = !task.Completed;
-        _repository.SaveTasks(_tasks);
+        return _tasks.Filter(predicate);
     }
 }

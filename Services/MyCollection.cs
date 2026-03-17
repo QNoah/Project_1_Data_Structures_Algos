@@ -55,7 +55,8 @@ public class MyCollection<T> : IMyCollection<T>
         }
         return default;
     }
-    public IMyCollection<T> Filter(Func<T, bool> predicate)
+
+    public MyCollection<T> Filter(Func<T, bool> predicate)
     {
         MyCollection<T> filtered = new MyCollection<T>();
         for (int i = 0; i < Count; i++)
@@ -64,6 +65,7 @@ public class MyCollection<T> : IMyCollection<T>
         }
         return filtered;
     }
+
     public void Sort(Comparison<T> comparison)
     {
         for (int i = 1; i < Count; i++)
@@ -80,6 +82,7 @@ public class MyCollection<T> : IMyCollection<T>
             }
         }
     }
+
     public R Reduce<R>(Func<R, T, R> accumulator)
     {
         if (Count == 0) return default;
@@ -102,10 +105,12 @@ public class MyCollection<T> : IMyCollection<T>
         }
         return result;
     }
+
     public IMyIterator<T> GetIterator()
     {
         return new MyIterator<T>(Items, Count);
     }
+    
     public IEnumerator<T> GetEnumerator()
     {
         for (int i = 0; i < Count; i++) yield return Items[i];
