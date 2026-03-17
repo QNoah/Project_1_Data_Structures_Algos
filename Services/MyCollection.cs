@@ -115,4 +115,5 @@ public class MyCollection<T> : IMyCollection<T>
     {
         for (int i = 0; i < Count; i++) yield return Items[i];
     } // Extra foreach lookup.
+    
 }

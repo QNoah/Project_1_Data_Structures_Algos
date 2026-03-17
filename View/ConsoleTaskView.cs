@@ -39,6 +39,31 @@ public class ConsoleTaskView : ITaskView
         }
     }
 
+    TaskItem.TaskStatus AskStatus()
+    {
+        while (true)
+        {
+            Console.WriteLine("\nOptions:");
+            Console.WriteLine("1. To Do");
+            Console.WriteLine("2. In Progress");
+            Console.WriteLine("3. Done");
+            string option = Prompt("Select the new status: ");
+            switch (option)
+            {
+                case "1":
+                    return TaskItem.TaskStatus.ToDo;
+                case "2":
+                    return TaskItem.TaskStatus.InProgress;
+                case "3":
+                    return TaskItem.TaskStatus.Done;
+                default:
+                    Console.WriteLine("Invalid option. Press any key to continue...");
+                    Console.ReadKey();
+                    break;
+            }
+        }
+    }
+
     public void Run()
     {
         while (true)
@@ -50,7 +75,7 @@ public class ConsoleTaskView : ITaskView
             Console.WriteLine("\nOptions:");
             Console.WriteLine("1. Add Task");
             Console.WriteLine("2. Remove Task");
-            // Console.WriteLine("3. Toggle Task State");
+            Console.WriteLine("3. Move Task");
             Console.WriteLine("4. Filter");
             Console.WriteLine("5. Exit");
             string option = Prompt("Select an option: ");
@@ -69,13 +94,14 @@ public class ConsoleTaskView : ITaskView
                         _service.RemoveTask(removeId);
                     }
                     break;
-                // case "3":
-                //     string toggleIdStr = Prompt("Enter task id to toggle: ");
-                //     if (int.TryParse(toggleIdStr, out int toggleId))
-                //     {
-                //         _service.ToggleTaskCompletion(toggleId);
-                //     }
-                //     break;
+                case "3":
+                    string moveIdStr = Prompt("Enter task ID to move: ");
+                    TaskItem.TaskStatus newStatus = AskStatus();
+                    if (int.TryParse(moveIdStr, out int moveId))
+                    {
+                        _service.MoveTask(moveId, newStatus);
+                    }
+                    break;
                 case "4":
                     MyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_service);
                     if (filteredTasks != null) _tasks = filteredTasks;
