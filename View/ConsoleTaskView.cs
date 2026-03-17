@@ -6,20 +6,6 @@ public class ConsoleTaskView : ITaskView
         _service = service;
     }
 
-    void DisplayTasks(MyCollection<TaskItem> tasks)
-    {
-        Console.Clear();
-        Console.WriteLine("==== ToDo List ====");
-        if (tasks.Count.Equals(0)) Console.WriteLine("No tasks.");
-        foreach (var task in tasks)
-        {
-            Console.Write($"{task.Id}. {task.Description} ");
-            Console.Write("[");
-            if (task.Completed) Console.Write("X");
-            Console.Write("]\n");
-        }
-    }
-
     string Prompt(string prompt)
     {
         Console.Write(prompt);
@@ -30,7 +16,7 @@ public class ConsoleTaskView : ITaskView
     {
         while (true)
         {
-            DisplayTasks(_service.GetAllTasks());
+            DisplayTaskView.DisplayTasks(_service.GetAllTasks());
             Console.WriteLine("\nOptions:");
             Console.WriteLine("1. Add Task");
             Console.WriteLine("2. Remove Task");
