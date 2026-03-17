@@ -9,7 +9,7 @@ public static class DisplayTaskView
         {
             Console.Write($"{task.Id}. {task.Description} ");
             Console.Write("[");
-            if (task.Completed) Console.Write("X");
+            if (task.Status == TaskItem.TaskStatus.Done) Console.Write("X");
             Console.Write("]\n");
         }
     }
