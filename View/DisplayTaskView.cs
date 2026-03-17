@@ -1,3 +1,6 @@
+using System.ComponentModel.Design;
+using System.Configuration.Assemblies;
+
 public static class DisplayTaskView
 {
     public static void DisplayTasks(MyCollection<TaskItem> tasks)
@@ -79,5 +82,28 @@ public static class DisplayTaskView
         }
 
         return text.PadRight(width);
+    }
+
+    public static void ViewTask(int taskId, ITaskService service)
+    {
+        Console.Clear();
+        TaskItem task = service.GetTaskById(taskId);
+
+        if (task == null)
+        {
+            Console.WriteLine("Task not found.");
+            return;
+        }
+
+        Console.WriteLine("======= Task Details =======");
+        Console.WriteLine($"ID          : {task.Id}");
+        Console.WriteLine($"Title       : {task.Title}");
+        Console.WriteLine($"Description : {task.Description}");
+        Console.WriteLine($"Priority    : {task.Priority}");
+        Console.WriteLine($"Status      : {task.Status}");
+        Console.WriteLine($"Created At  : {task.CreatedAt}");
+        Console.WriteLine();
+        Console.WriteLine("Press any key to go back.");
+        Console.ReadKey();
     }
 }
