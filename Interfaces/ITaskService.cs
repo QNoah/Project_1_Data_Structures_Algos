@@ -1,7 +1,7 @@
 public interface ITaskService
 {
     MyCollection<TaskItem> GetAllTasks();
-    void AddTask(string title, string description, TaskItem.TaskPriority priority);
+    void AddTask(string title, int? parentId, string description, TaskItem.TaskPriority priority);
     void RemoveTask(int id);
     MyCollection<TaskItem> ApplyFilter(Func<TaskItem, bool> predicate);
     void MoveTask(int id, TaskItem.TaskStatus newStatus);

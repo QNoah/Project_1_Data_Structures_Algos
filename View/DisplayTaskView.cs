@@ -95,6 +95,8 @@ public static class DisplayTaskView
             return;
         }
 
+        Console.WriteLine("1. Back");
+        Console.WriteLine("2. Create subtask");
         Console.WriteLine("======= Task Details =======");
         Console.WriteLine($"ID          : {task.Id}");
         Console.WriteLine($"Title       : {task.Title}");
@@ -102,8 +104,7 @@ public static class DisplayTaskView
         Console.WriteLine($"Priority    : {task.Priority}");
         Console.WriteLine($"Status      : {task.Status}");
         Console.WriteLine($"Created At  : {task.CreatedAt}");
-        Console.WriteLine();
-        Console.WriteLine("Press any key to go back.");
+        // string opt = Console.ReadLine();
         Console.ReadKey();
     }
 }

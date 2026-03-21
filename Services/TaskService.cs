@@ -16,7 +16,7 @@ public class TaskService : ITaskService
 
     public TaskItem GetTaskById(int id) => _tasks.FindBy(id, (t, key) => t.Id == key);
 
-    public void AddTask(string title, string description, TaskItem.TaskPriority priority)
+    public void AddTask(string title, int? parentId, string description, TaskItem.TaskPriority priority)
     {
         int maxId = 0;
         var iterator = _tasks.GetIterator();
@@ -29,6 +29,7 @@ public class TaskService : ITaskService
         var newTask = new TaskItem
         {
             Id = maxId + 1,
+            ParentId = parentId,
             Title = title,
             Description = description,
             Priority = priority,

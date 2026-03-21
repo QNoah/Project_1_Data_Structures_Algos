@@ -74,6 +74,7 @@ public class ConsoleTaskView : ITaskView
 
             Console.WriteLine("\nOptions:");
             Console.WriteLine("1. Add Task");
+            Console.WriteLine("Hier wil ik subtask toevoegen");
             Console.WriteLine("2. Remove Task");
             Console.WriteLine("3. Move Task");
             Console.WriteLine("4. View Task");
@@ -86,7 +87,7 @@ public class ConsoleTaskView : ITaskView
                     string title = Prompt("Enter task title: ");
                     string description = Prompt("Enter task description: ");
                     TaskItem.TaskPriority priority = AskPriority();
-                    _service.AddTask(title, description, priority);
+                    _service.AddTask(title, null, description, priority);
                     break;
                 case "2":
                     string removeIdStr = Prompt("Enter task id to remove: ");
