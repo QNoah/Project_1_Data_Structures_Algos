@@ -1,12 +1,16 @@
 public class ConsoleTaskView : ITaskView
 {
-    private readonly ITaskService _service;
-    public ConsoleTaskView(ITaskService service)
+    private readonly ITaskService _taskservice;
+    private readonly IUserService _userservice;
+
+    public ConsoleTaskView(ITaskService tservice, IUserService uservice)
     {
-        _service = service;
+        _taskservice = tservice;
+        _userservice = uservice;
     }
 
     private MyCollection<TaskItem> _tasks;
+    private MyCollection<User> _users;
 
     string Prompt(string prompt)
     {
@@ -68,9 +72,9 @@ public class ConsoleTaskView : ITaskView
     {
         while (true)
         {
-            if (_tasks == null) _tasks = _service.GetAllTasks();
-            DisplayTaskView.DisplayTasks(_tasks);
-            _tasks = _service.GetAllTasks();
+            if (_tasks == null) _tasks = _taskservice.GetAllTasks();
+            DisplayView.DisplayTasks(_tasks);
+            _tasks = _taskservice.GetAllTasks();
 
             Console.WriteLine("\nOptions:");
             Console.WriteLine("1. Add Task");
@@ -78,7 +82,8 @@ public class ConsoleTaskView : ITaskView
             Console.WriteLine("3. Move Task");
             Console.WriteLine("4. View Task");
             Console.WriteLine("5. Filter");
-            Console.WriteLine("6. Exit");
+            Console.WriteLine("6. User management");
+            Console.WriteLine("7. Exit");
             string option = Prompt("Select an option: ");
             switch (option)
             {
@@ -86,13 +91,13 @@ public class ConsoleTaskView : ITaskView
                     string title = Prompt("Enter task title: ");
                     string description = Prompt("Enter task description: ");
                     TaskItem.TaskPriority priority = AskPriority();
-                    _service.AddTask(title, description, priority);
+                    _taskservice.AddTask(title, description, priority);
                     break;
                 case "2":
                     string removeIdStr = Prompt("Enter task id to remove: ");
                     if (int.TryParse(removeIdStr, out int removeId))
                     {
-                        _service.RemoveTask(removeId);
+                        _taskservice.RemoveTask(removeId);
                     }
                     break;
                 case "3":
@@ -100,26 +105,69 @@ public class ConsoleTaskView : ITaskView
                     TaskItem.TaskStatus newStatus = AskStatus();
                     if (int.TryParse(moveIdStr, out int moveId))
                     {
-                        _service.MoveTask(moveId, newStatus);
+                        _taskservice.MoveTask(moveId, newStatus);
                     }
                     break;
                 case "4":
                     string viewIdStr = Prompt("Enter task ID to view: ");
                     if (int.TryParse(viewIdStr, out int viewId))
                     {
-                        DisplayTaskView.ViewTask(viewId, _service);
+                        DisplayView.ViewTask(viewId, _taskservice);
                     }
                     break;
                 case "5":
-                    MyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_service);
+                    MyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_taskservice);
                     if (filteredTasks != null) _tasks = filteredTasks;
                     break;
                 case "6":
+                    UserManagementView();
+                    break;
+                case "7":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press any key to continue...");
                     Console.ReadKey();
                     break;
+            }
+        }
+    }
+
+    public void UserManagementView()
+    {
+        while (true)
+        {
+            if (_users == null) _users = _userservice.GetAllUsers();
+            DisplayView.DisplayUsers(_users);
+            _users = _userservice.GetAllUsers();
+
+            Console.WriteLine("\nOptions:");
+            Console.WriteLine("1. Add User");
+            Console.WriteLine("2. Remove User");
+            Console.WriteLine("3. View User");
+            Console.WriteLine("4. Go back");
+            string option = Prompt("Select an option: ");
+            switch (option)
+            {
+                case "1":
+                    string name = Prompt("Enter name: ");
+                    _userservice.AddUser(name);
+                    break;
+                case "2":
+                    string removeIdStr = Prompt("Enter user ID to remove: ");
+                    if (int.TryParse(removeIdStr, out int removeId))
+                    {
+                        _userservice.RemoveUser(removeId);
+                    }
+                    break;
+                case "3":
+                    string viewIdStr = Prompt("Enter user ID to view: ");
+                    if (int.TryParse(viewIdStr, out int viewId))
+                    {
+                        DisplayView.ViewUser(viewId, _userservice);
+                    }
+                    break;
+                case "4":
+                    return;
             }
         }
     }
