@@ -3,10 +3,13 @@
     static void Main(string[] args)
     {
         // Dependency injection: wiring up our components
-        string filePath = "tasks.json";
-        ITaskRepository repository = new JsonTaskRepository(filePath);
-        ITaskService service = new TaskService(repository);
-        ITaskView view = new ConsoleTaskView(service);
+        string tfilePath = "tasks.json";
+        string ufilePath = "users.json";
+        ITaskRepository trepository = new JsonTaskRepository(tfilePath);
+        IUserRepository urepository = new JsonUserRepository(ufilePath);
+        ITaskService tservice = new TaskService(trepository);
+        IUserService uservice = new UserService(urepository);
+        ITaskView view = new ConsoleTaskView(tservice, uservice);
         // Run the view
         view.Run();
     }
