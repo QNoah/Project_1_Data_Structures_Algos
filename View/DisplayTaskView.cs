@@ -1,5 +1,6 @@
 using System.ComponentModel.Design;
 using System.Configuration.Assemblies;
+using System.Runtime.InteropServices.Marshalling;
 
 public static class DisplayTaskView
 {
@@ -120,6 +121,22 @@ public static class DisplayTaskView
         Console.WriteLine($"Status      : {task.Status}");
         Console.WriteLine($"Created At  : {task.CreatedAt}");
 
+        ViewTaskChilds(taskId, service);
+
         Console.ReadKey();
+    }
+    public static void ViewTaskChilds(int parentId, ITaskService service)
+    {
+        MyCollection<TaskItem> childs = service.ApplyFilter(t => t.ParentId == parentId);
+
+        if (childs is null || childs.Count <= 0) return;
+        Console.WriteLine();
+        Console.WriteLine("======= Child Details =======");
+
+        foreach (TaskItem c in childs)
+        {
+            Console.WriteLine($"ID          : {c.Id}");
+            Console.WriteLine($"Title       : {c.Title}");
+        }
     }
 }
