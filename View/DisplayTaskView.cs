@@ -99,9 +99,19 @@ public static class DisplayTaskView
             Console.WriteLine("Task not found.");
             return;
         }
-
         Console.WriteLine("1. Back");
-        Console.WriteLine("2. Create subtask");
+
+        if (task.ParentId != null)
+        {
+            TaskItem parent = service.GetTaskById(task.ParentId.Value);
+            if (parent != null)
+            {
+                Console.WriteLine("======= Parent Details =======");
+                Console.WriteLine($"ID          : {parent.Id}");
+                Console.WriteLine($"Title       : {parent.Title}");
+            }
+        }
+
         Console.WriteLine("======= Task Details =======");
         Console.WriteLine($"ID          : {task.Id}");
         Console.WriteLine($"Title       : {task.Title}");
@@ -109,6 +119,7 @@ public static class DisplayTaskView
         Console.WriteLine($"Priority    : {task.Priority}");
         Console.WriteLine($"Status      : {task.Status}");
         Console.WriteLine($"Created At  : {task.CreatedAt}");
+
         Console.ReadKey();
     }
 }
