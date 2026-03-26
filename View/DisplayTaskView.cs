@@ -3,6 +3,11 @@ using System.Configuration.Assemblies;
 
 public static class DisplayTaskView
 {
+    public static void DisplayTasksList(MyCollection<TaskItem> tasks)
+    {
+        Console.Clear();
+        foreach (TaskItem t in tasks) Console.WriteLine($"{t.Id}. {t.Title}");
+    }
     public static void DisplayTasks(MyCollection<TaskItem> tasks)
     {
         Console.Clear();
@@ -104,7 +109,6 @@ public static class DisplayTaskView
         Console.WriteLine($"Priority    : {task.Priority}");
         Console.WriteLine($"Status      : {task.Status}");
         Console.WriteLine($"Created At  : {task.CreatedAt}");
-        // string opt = Console.ReadLine();
         Console.ReadKey();
     }
 }

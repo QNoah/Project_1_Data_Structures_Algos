@@ -14,6 +14,20 @@ public class ConsoleTaskView : ITaskView
         return Console.ReadLine()!;
     }
 
+    int? AskParent()
+    {
+        while (true)
+        {
+            Console.Clear();
+            DisplayTaskView.DisplayTasksList(_tasks);
+            Console.WriteLine("Enter an existing parent id or press ENTER: ");
+            Int32.TryParse(Console.ReadLine(), out int id);
+
+            if (_service.GetTaskById(id) is not null) return id;
+            return null;
+        }
+    }
+
     TaskItem.TaskPriority AskPriority()
     {
         while (true)
@@ -74,7 +88,6 @@ public class ConsoleTaskView : ITaskView
 
             Console.WriteLine("\nOptions:");
             Console.WriteLine("1. Add Task");
-            Console.WriteLine("Hier wil ik subtask toevoegen");
             Console.WriteLine("2. Remove Task");
             Console.WriteLine("3. Move Task");
             Console.WriteLine("4. View Task");
@@ -85,9 +98,10 @@ public class ConsoleTaskView : ITaskView
             {
                 case "1":
                     string title = Prompt("Enter task title: ");
+                    int? parentId = AskParent();
                     string description = Prompt("Enter task description: ");
                     TaskItem.TaskPriority priority = AskPriority();
-                    _service.AddTask(title, null, description, priority);
+                    _service.AddTask(title, parentId, description, priority);
                     break;
                 case "2":
                     string removeIdStr = Prompt("Enter task id to remove: ");
