@@ -115,7 +115,27 @@ public class ConsoleTaskView : ITaskView
                     TaskItem.TaskStatus newStatus = AskStatus();
                     if (int.TryParse(moveIdStr, out int moveId))
                     {
-                        _service.MoveTask(moveId, newStatus);
+                        bool success = _service.MoveTask(moveId, newStatus);
+
+                        if (!success && newStatus == TaskItem.TaskStatus.Done)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Wrong: You can't mark this task as 'Done'!");
+                            Console.WriteLine("Reason: There are still incompleted subtaks.\n");
+                            Console.WriteLine("Mark all subtasks 'Done'.");
+                            Console.WriteLine("\nPress [ENTER] to go back...");
+                            Console.ReadKey();
+                        }
+                        else if (success)
+                        {
+                            Console.WriteLine("Status edited!");
+                            Thread.Sleep(1500);
+                        }
+                        else if (!success)
+                        {
+                            Console.WriteLine("Task not found or error occurred.");
+                            Console.ReadKey();
+                        }
                     }
                     break;
                 case "4":

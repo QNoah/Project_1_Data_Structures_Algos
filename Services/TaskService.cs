@@ -23,7 +23,7 @@ public class TaskService : ITaskService
         while (iterator.HasNext())
         {
             var task = iterator.Next();
-            if(task.Id > maxId) maxId = task.Id;
+            if (task.Id > maxId) maxId = task.Id;
         }
 
         var newTask = new TaskItem
@@ -51,11 +51,40 @@ public class TaskService : ITaskService
         }
     }
 
-    public void MoveTask(int id, TaskItem.TaskStatus newStatus)
+    public bool MoveTask(int id, TaskItem.TaskStatus newStatus)
     {
         var task = _tasks.FindBy(id, (t, key) => t.Id == key);
-        if (task is not null) task.Status = newStatus;
+        if (task is null) return false;
+
+        if (newStatus == TaskItem.TaskStatus.Done)
+        {
+            if (!AreAllChildrenCompleted(id))
+            {
+                return false;
+            }
+        }
+
+        task.Status = newStatus;
         _repository.SaveTasks(_tasks);
+        return true;
+    }
+
+    private bool AreAllChildrenCompleted(int taskId)
+    {
+        var children = _tasks.Filter(t => t.ParentId == taskId);
+
+        if (children is null || children.Count == 0)
+            return true;
+
+        var iterator = children.GetIterator();
+        while (iterator.HasNext())
+        {
+            var child = iterator.Next();
+            if (child.Status != TaskItem.TaskStatus.Done)
+                return false;
+        }
+
+        return true;
     }
 
     public MyCollection<TaskItem> ApplyFilter(Func<TaskItem, bool> predicate)

@@ -4,6 +4,6 @@ public interface ITaskService
     void AddTask(string title, int? parentId, string description, TaskItem.TaskPriority priority);
     void RemoveTask(int id);
     MyCollection<TaskItem> ApplyFilter(Func<TaskItem, bool> predicate);
-    void MoveTask(int id, TaskItem.TaskStatus newStatus);
+    bool MoveTask(int id, TaskItem.TaskStatus newStatus);
     TaskItem GetTaskById(int id);
 }
