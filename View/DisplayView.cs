@@ -1,8 +1,14 @@
 using System.ComponentModel.Design;
 using System.Configuration.Assemblies;
+using System.Runtime.InteropServices.Marshalling;
 
 public static class DisplayView
 {
+    public static void DisplayTasksList(MyCollection<TaskItem> tasks)
+    {
+        Console.Clear();
+        foreach (TaskItem t in tasks) Console.WriteLine($"{t.Id}. {t.Title}");
+    }
     public static void DisplayTasks(MyCollection<TaskItem> tasks)
     {
         Console.Clear();
@@ -94,6 +100,18 @@ public static class DisplayView
             Console.WriteLine("Task not found.");
             return;
         }
+        Console.WriteLine("1. Back");
+
+        if (task.ParentId != null)
+        {
+            TaskItem parent = service.GetTaskById(task.ParentId.Value);
+            if (parent != null)
+            {
+                Console.WriteLine("======= Parent Details =======");
+                Console.WriteLine($"ID          : {parent.Id}");
+                Console.WriteLine($"Title       : {parent.Title}");
+            }
+        }
 
         Console.WriteLine("======= Task Details =======");
         Console.WriteLine($"ID          : {task.Id}");
@@ -102,9 +120,24 @@ public static class DisplayView
         Console.WriteLine($"Priority    : {task.Priority}");
         Console.WriteLine($"Status      : {task.Status}");
         Console.WriteLine($"Created At  : {task.CreatedAt}");
-        Console.WriteLine();
-        Console.WriteLine("Press any key to go back.");
+
+        ViewTaskChilds(taskId, service);
+
         Console.ReadKey();
+    }
+    public static void ViewTaskChilds(int parentId, ITaskService service)
+    {
+        MyCollection<TaskItem> childs = service.ApplyFilter(t => t.ParentId == parentId);
+
+        if (childs is null || childs.Count <= 0) return;
+        Console.WriteLine();
+        Console.WriteLine("======= Child Details =======");
+
+        foreach (TaskItem c in childs)
+        {
+            Console.WriteLine($"ID          : {c.Id}");
+            Console.WriteLine($"Title       : {c.Title}");
+        }
     }
 
     public static void ViewUser(int userId, IUserService service)

@@ -18,6 +18,20 @@ public class ConsoleTaskView : ITaskView
         return Console.ReadLine()!;
     }
 
+    int? AskParent()
+    {
+        while (true)
+        {
+            Console.Clear();
+            DisplayView.DisplayTasksList(_tasks);
+            Console.WriteLine("Enter an existing parent id or press ENTER: ");
+            Int32.TryParse(Console.ReadLine(), out int id);
+
+            if (_taskservice.GetTaskById(id) is not null) return id;
+            return null;
+        }
+    }
+
     TaskItem.TaskPriority AskPriority()
     {
         while (true)
@@ -89,9 +103,10 @@ public class ConsoleTaskView : ITaskView
             {
                 case "1":
                     string title = Prompt("Enter task title: ");
+                    int? parentId = AskParent();
                     string description = Prompt("Enter task description: ");
                     TaskItem.TaskPriority priority = AskPriority();
-                    _taskservice.AddTask(title, description, priority);
+                    _taskservice.AddTask(title, parentId, description, priority);
                     break;
                 case "2":
                     string removeIdStr = Prompt("Enter task id to remove: ");
@@ -105,7 +120,27 @@ public class ConsoleTaskView : ITaskView
                     TaskItem.TaskStatus newStatus = AskStatus();
                     if (int.TryParse(moveIdStr, out int moveId))
                     {
-                        _taskservice.MoveTask(moveId, newStatus);
+                        bool success = _taskservice.MoveTask(moveId, newStatus);
+
+                        if (!success && newStatus == TaskItem.TaskStatus.Done)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Wrong: You can't mark this task as 'Done'!");
+                            Console.WriteLine("Reason: There are still incompleted subtaks.\n");
+                            Console.WriteLine("Mark all subtasks 'Done'.");
+                            Console.WriteLine("\nPress [ENTER] to go back...");
+                            Console.ReadKey();
+                        }
+                        else if (success)
+                        {
+                            Console.WriteLine("Status edited!");
+                            Thread.Sleep(1500);
+                        }
+                        else if (!success)
+                        {
+                            Console.WriteLine("Task not found or error occurred.");
+                            Console.ReadKey();
+                        }
                     }
                     break;
                 case "4":
