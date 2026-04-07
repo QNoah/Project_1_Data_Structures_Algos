@@ -5,11 +5,13 @@ public class TaskService : ITaskService
 {
     private readonly ITaskRepository _repository;
     private readonly MyCollection<TaskItem> _tasks;
+    private readonly IUserService _userService;
 
-    public TaskService(ITaskRepository repository)
+    public TaskService(ITaskRepository repository, IUserService userService)
     {
         _repository = repository;
         _tasks = _repository.LoadTasks();
+        _userService = userService;
     }
 
     public MyCollection<TaskItem> GetAllTasks() => _tasks;
@@ -51,7 +53,7 @@ public class TaskService : ITaskService
         }
     }
 
-    public bool UpdateTask(int id, string? title, string? description, TaskItem.TaskPriority? priority)
+    public bool UpdateTask(int id, string? title, string? description, TaskItem.TaskPriority? priority, int? userId)
     {
         var task = GetTaskById(id);
         if (task is null) return false;
@@ -60,6 +62,13 @@ public class TaskService : ITaskService
         if (description is not null) task.Description = description;
         if (priority is not null) task.Priority = priority.Value;
 
+        if (userId.HasValue)
+        {
+            var userExists = _userService.GetUserById(userId.Value) is not null;
+            if (userExists) task.UserId = userId.Value;
+        }
+
+        _repository.SaveTasks(_tasks);
         return true;
     }
 

@@ -136,12 +136,26 @@ public class ConsoleTaskView : ITaskView
                         {
                             newPriority = AskPriority();
                         }
+                        string editUserIdStr = Prompt("Enter User ID to add (leave empty = no change): ");
+
+                        int? editUserId = null;
+                        if (!string.IsNullOrWhiteSpace(editUserIdStr))
+                        {
+                            if (int.TryParse(editUserIdStr, out int parsedId))
+                                editUserId = parsedId;
+                            else
+                            {
+                                Console.WriteLine("Invalid user id.");
+                                return;
+                            }
+                        }
 
                         bool updated = _taskservice.UpdateTask(
                             editId,
                             string.IsNullOrWhiteSpace(newTitle) ? null : newTitle,
                             string.IsNullOrWhiteSpace(newDescription) ? null : newDescription,
-                            newPriority
+                            newPriority,
+                            editUserId
                         );
 
                         Console.WriteLine(updated ? "Task updated!" : "Task not found or update failed.");

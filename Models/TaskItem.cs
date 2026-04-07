@@ -10,4 +10,5 @@ public class TaskItem
     public TaskPriority Priority { get; set; }
     public TaskStatus Status { get; set; }
     public DateTime CreatedAt { get; set; }
+    public int? UserId { get; set; }
 }
