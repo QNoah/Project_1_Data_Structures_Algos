@@ -93,71 +93,110 @@ public class ConsoleTaskView : ITaskView
             Console.WriteLine("\nOptions:");
             Console.WriteLine("1. Add Task");
             Console.WriteLine("2. Remove Task");
-            Console.WriteLine("3. Move Task");
-            Console.WriteLine("4. View Task");
-            Console.WriteLine("5. Filter");
-            Console.WriteLine("6. User management");
-            Console.WriteLine("7. Exit");
+            Console.WriteLine("3. Edit Task");
+            Console.WriteLine("4. Move Task");
+            Console.WriteLine("5. View Task");
+            Console.WriteLine("6. Filter");
+            Console.WriteLine("7. User management");
+            Console.WriteLine("8. Exit");
+
             string option = Prompt("Select an option: ");
             switch (option)
             {
                 case "1":
-                    string title = Prompt("Enter task title: ");
-                    int? parentId = AskParent();
-                    string description = Prompt("Enter task description: ");
-                    TaskItem.TaskPriority priority = AskPriority();
-                    _taskservice.AddTask(title, parentId, description, priority);
-                    break;
+                    {
+                        string title = Prompt("Enter task title: ");
+                        int? parentId = AskParent();
+                        string description = Prompt("Enter task description: ");
+                        TaskItem.TaskPriority priority = AskPriority();
+                        _taskservice.AddTask(title, parentId, description, priority);
+                        break;
+                    }
                 case "2":
-                    string removeIdStr = Prompt("Enter task id to remove: ");
-                    if (int.TryParse(removeIdStr, out int removeId))
                     {
-                        _taskservice.RemoveTask(removeId);
+                        string removeIdStr = Prompt("Enter task id to remove: ");
+                        if (int.TryParse(removeIdStr, out int removeId))
+                        {
+                            _taskservice.RemoveTask(removeId);
+                        }
+                        break;
                     }
-                    break;
                 case "3":
-                    string moveIdStr = Prompt("Enter task ID to move: ");
-                    TaskItem.TaskStatus newStatus = AskStatus();
-                    if (int.TryParse(moveIdStr, out int moveId))
                     {
-                        bool success = _taskservice.MoveTask(moveId, newStatus);
+                        string editIdStr = Prompt("Enter task ID to edit: ");
+                        if (!int.TryParse(editIdStr, out int editId)) break;
 
-                        if (!success && newStatus == TaskItem.TaskStatus.Done)
+                        Console.WriteLine("Leave empty to keep current value.");
+                        string newTitle = Prompt("New title: ");
+                        string newDescription = Prompt("New description: ");
+
+                        string prioStr = Prompt("Change priority? (y/n): ");
+                        TaskItem.TaskPriority? newPriority = null;
+                        if (prioStr.Trim().Equals("y", StringComparison.OrdinalIgnoreCase))
                         {
-                            Console.Clear();
-                            Console.WriteLine("Wrong: You can't mark this task as 'Done'!");
-                            Console.WriteLine("Reason: There are still incompleted subtaks.\n");
-                            Console.WriteLine("Mark all subtasks 'Done'.");
-                            Console.WriteLine("\nPress [ENTER] to go back...");
-                            Console.ReadKey();
+                            newPriority = AskPriority();
                         }
-                        else if (success)
-                        {
-                            Console.WriteLine("Status edited!");
-                            Thread.Sleep(1500);
-                        }
-                        else if (!success)
-                        {
-                            Console.WriteLine("Task not found or error occurred.");
-                            Console.ReadKey();
-                        }
+
+                        bool updated = _taskservice.UpdateTask(
+                            editId,
+                            string.IsNullOrWhiteSpace(newTitle) ? null : newTitle,
+                            string.IsNullOrWhiteSpace(newDescription) ? null : newDescription,
+                            newPriority
+                        );
+
+                        Console.WriteLine(updated ? "Task updated!" : "Task not found or update failed.");
+                        Thread.Sleep(1500);
+                        break;
                     }
-                    break;
                 case "4":
-                    string viewIdStr = Prompt("Enter task ID to view: ");
-                    if (int.TryParse(viewIdStr, out int viewId))
                     {
-                        DisplayView.ViewTask(viewId, _taskservice);
+                        string moveIdStr = Prompt("Enter task ID to move: ");
+                        TaskItem.TaskStatus newStatus = AskStatus();
+                        if (int.TryParse(moveIdStr, out int moveId))
+                        {
+                            bool success = _taskservice.MoveTask(moveId, newStatus);
+
+                            if (!success && newStatus == TaskItem.TaskStatus.Done)
+                            {
+                                Console.Clear();
+                                Console.WriteLine("Wrong: You can't mark this task as 'Done'!");
+                                Console.WriteLine("Reason: There are still incompleted subtaks.\n");
+                                Console.WriteLine("Mark all subtasks 'Done'.");
+                                Console.WriteLine("\nPress [ENTER] to go back...");
+                                Console.ReadKey();
+                            }
+                            else if (success)
+                            {
+                                Console.WriteLine("Status edited!");
+                                Thread.Sleep(1500);
+                            }
+                            else
+                            {
+                                Console.WriteLine("Task not found or error occurred.");
+                                Console.ReadKey();
+                            }
+                        }
+                        break;
                     }
-                    break;
                 case "5":
-                    MyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_taskservice);
-                    if (filteredTasks != null) _tasks = filteredTasks;
-                    break;
+                    {
+                        string viewIdStr = Prompt("Enter task ID to view: ");
+                        if (int.TryParse(viewIdStr, out int viewId))
+                        {
+                            DisplayView.ViewTask(viewId, _taskservice);
+                        }
+                        break;
+                    }
                 case "6":
+                    {
+                        MyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_taskservice);
+                        if (filteredTasks != null) _tasks = filteredTasks;
+                        break;
+                    }
+                case "7":
                     UserManagementView();
                     break;
-                case "7":
+                case "8":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Press any key to continue...");

@@ -51,6 +51,18 @@ public class TaskService : ITaskService
         }
     }
 
+    public bool UpdateTask(int id, string? title, string? description, TaskItem.TaskPriority? priority)
+    {
+        var task = GetTaskById(id);
+        if (task is null) return false;
+
+        if (title is not null) task.Title = title;
+        if (description is not null) task.Description = description;
+        if (priority is not null) task.Priority = priority.Value;
+
+        return true;
+    }
+
     public bool MoveTask(int id, TaskItem.TaskStatus newStatus)
     {
         var task = _tasks.FindBy(id, (t, key) => t.Id == key);
