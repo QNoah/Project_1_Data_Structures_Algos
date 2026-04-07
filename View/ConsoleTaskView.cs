@@ -23,11 +23,11 @@ public class ConsoleTaskView : ITaskView
         while (true)
         {
             Console.Clear();
-            DisplayTaskView.DisplayTasksList(_tasks);
+            DisplayView.DisplayTasksList(_tasks);
             Console.WriteLine("Enter an existing parent id or press ENTER: ");
             Int32.TryParse(Console.ReadLine(), out int id);
 
-            if (_service.GetTaskById(id) is not null) return id;
+            if (_taskservice.GetTaskById(id) is not null) return id;
             return null;
         }
     }
