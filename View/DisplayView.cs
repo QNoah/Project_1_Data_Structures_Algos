@@ -2,7 +2,7 @@ using System.ComponentModel.Design;
 using System.Configuration.Assemblies;
 using System.Runtime.InteropServices.Marshalling;
 
-public static class DisplayTaskView
+public static class DisplayView
 {
     public static void DisplayTasksList(MyCollection<TaskItem> tasks)
     {
@@ -137,6 +137,37 @@ public static class DisplayTaskView
         {
             Console.WriteLine($"ID          : {c.Id}");
             Console.WriteLine($"Title       : {c.Title}");
+        }
+    }
+
+    public static void ViewUser(int userId, IUserService service)
+    {
+        Console.Clear();
+        User user = service.GetUserById(userId);
+
+        if (user == null)
+        {
+            Console.WriteLine("User not found.");
+            return;
+        }
+
+        Console.WriteLine("======= User Details =======");
+        Console.WriteLine($"ID          : {user.Id}");
+        Console.WriteLine($"Name        : {user.Name}");
+        Console.WriteLine($"Created At  : {user.CreatedAt}");
+        Console.WriteLine();
+        Console.WriteLine("Press any key to go back.");
+        Console.ReadKey();
+    }
+
+    public static void DisplayUsers(MyCollection<User> users)
+    {
+        Console.Clear();
+        Console.WriteLine("======= All Users =======");
+        Console.WriteLine();
+        foreach(User user in users)
+        {
+            Console.WriteLine($"{user.Id}. {user.Name}");
         }
     }
 }
