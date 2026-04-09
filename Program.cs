@@ -1,16 +1,37 @@
-﻿class Program
+﻿public enum CollectionType
+{
+    LinkedList,
+    Array
+}
+
+class Program
 {
     static void Main(string[] args)
     {
-        // Dependency injection: wiring up our components
+        Console.WriteLine("Kies datastructuur:");
+        Console.WriteLine("1. Array");
+        Console.WriteLine("2. LinkedList");
+        Console.Write("Jouw keuze: ");
+        string? choice = Console.ReadLine();
+
+        CollectionType collectionType = choice switch
+        {
+            "2" => CollectionType.LinkedList,
+            _ => CollectionType.Array
+        };
+
         string tfilePath = "tasks.json";
         string ufilePath = "users.json";
+
         ITaskRepository trepository = new JsonTaskRepository(tfilePath);
+        // ITaskRepository trepository = new JsonTaskRepository(tfilePath, collectionType);
+        // IUserRepository urepository = new JsonUserRepository(ufilePath, collectionType);
         IUserRepository urepository = new JsonUserRepository(ufilePath);
+
         IUserService uservice = new UserService(urepository);
         ITaskService tservice = new TaskService(trepository, uservice);
         ITaskView view = new ConsoleTaskView(tservice, uservice);
-        // Run the view
+
         view.Run();
     }
 }
