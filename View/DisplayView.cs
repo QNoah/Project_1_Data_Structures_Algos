@@ -90,21 +90,24 @@ public static class DisplayView
         return text.PadRight(width);
     }
 
-    public static void ViewTask(int taskId, ITaskService service)
+    public static void ViewTask(int taskId, ITaskService taskService, IUserService userService)
     {
         Console.Clear();
-        TaskItem task = service.GetTaskById(taskId);
+        TaskItem task = taskService.GetTaskById(taskId);
 
-        if (task == null)
+        if (task is null)
         {
             Console.WriteLine("Task not found.");
             return;
         }
+
+        User user = userService.GetUserById((int)task.UserId);
+
         Console.WriteLine("1. Back");
 
         if (task.ParentId != null)
         {
-            TaskItem parent = service.GetTaskById(task.ParentId.Value);
+            TaskItem parent = taskService.GetTaskById(task.ParentId.Value);
             if (parent != null)
             {
                 Console.WriteLine("======= Parent Details =======");
@@ -120,8 +123,9 @@ public static class DisplayView
         Console.WriteLine($"Priority    : {task.Priority}");
         Console.WriteLine($"Status      : {task.Status}");
         Console.WriteLine($"Created At  : {task.CreatedAt}");
+        Console.WriteLine($"Assigned to  : {user.Name}");
 
-        ViewTaskChilds(taskId, service);
+        ViewTaskChilds(taskId, taskService);
 
         Console.ReadKey();
     }
@@ -165,7 +169,7 @@ public static class DisplayView
         Console.Clear();
         Console.WriteLine("======= All Users =======");
         Console.WriteLine();
-        foreach(User user in users)
+        foreach (User user in users)
         {
             Console.WriteLine($"{user.Id}. {user.Name}");
         }

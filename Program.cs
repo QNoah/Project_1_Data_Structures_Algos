@@ -7,8 +7,8 @@
         string ufilePath = "users.json";
         ITaskRepository trepository = new JsonTaskRepository(tfilePath);
         IUserRepository urepository = new JsonUserRepository(ufilePath);
-        ITaskService tservice = new TaskService(trepository);
         IUserService uservice = new UserService(urepository);
+        ITaskService tservice = new TaskService(trepository, uservice);
         ITaskView view = new ConsoleTaskView(tservice, uservice);
         // Run the view
         view.Run();
