@@ -197,7 +197,7 @@ public class ConsoleTaskView : ITaskView
                         string viewIdStr = Prompt("Enter task ID to view: ");
                         if (int.TryParse(viewIdStr, out int viewId))
                         {
-                            DisplayView.ViewTask(viewId, _taskservice);
+                            DisplayView.ViewTask(viewId, _taskservice, _userservice);
                         }
                         break;
                     }
