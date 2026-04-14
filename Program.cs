@@ -24,13 +24,11 @@ class Program
         string ufilePath = "users.json";
 
         ITaskRepository trepository = new JsonTaskRepository(tfilePath);
-        // ITaskRepository trepository = new JsonTaskRepository(tfilePath, collectionType);
-        // IUserRepository urepository = new JsonUserRepository(ufilePath, collectionType);
-        IUserRepository urepository = new JsonUserRepository(ufilePath);
+        IUserRepository urepository = new JsonUserRepository(ufilePath, collectionType);
 
         IUserService uservice = new UserService(urepository);
         ITaskService tservice = new TaskService(trepository, uservice);
-        ITaskView view = new ConsoleTaskView(tservice, uservice);
+        ITaskView view = new ConsoleTaskView(tservice, uservice, collectionType);
 
         view.Run();
     }

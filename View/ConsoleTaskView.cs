@@ -2,15 +2,17 @@ public class ConsoleTaskView : ITaskView
 {
     private readonly ITaskService _taskservice;
     private readonly IUserService _userservice;
+    private readonly CollectionType _collectionType;
 
-    public ConsoleTaskView(ITaskService tservice, IUserService uservice)
+    public ConsoleTaskView(ITaskService tservice, IUserService uservice, CollectionType collectionType)
     {
         _taskservice = tservice;
         _userservice = uservice;
+        _collectionType = collectionType;
     }
 
-    private MyCollection<TaskItem> _tasks;
-    private MyCollection<User> _users;
+    private IMyCollection<TaskItem> _tasks;
+    private IMyCollection<User> _users;
 
     string Prompt(string prompt)
     {
@@ -87,7 +89,7 @@ public class ConsoleTaskView : ITaskView
         while (true)
         {
             if (_tasks == null) _tasks = _taskservice.GetAllTasks();
-            DisplayView.DisplayTasks(_tasks);
+            DisplayView.DisplayTasks(_tasks, _collectionType);
             _tasks = _taskservice.GetAllTasks();
 
             Console.WriteLine("\nOptions:");
@@ -203,8 +205,8 @@ public class ConsoleTaskView : ITaskView
                     }
                 case "6":
                     {
-                        MyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_taskservice);
-                        if (filteredTasks != null) _tasks = filteredTasks;
+                        IMyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_taskservice);
+                        if (filteredTasks is not null) _tasks = filteredTasks;
                         break;
                     }
                 case "7":

@@ -4,17 +4,24 @@ using System.Runtime.InteropServices.Marshalling;
 
 public static class DisplayView
 {
-    public static void DisplayTasksList(MyCollection<TaskItem> tasks)
+    private static IMyCollection<TaskItem> CreateCollection(CollectionType t) => t switch
+    {
+        CollectionType.Array => new MyArrayCollection<TaskItem>(),
+        CollectionType.LinkedList => new MyLinkedListCollection<TaskItem>(),
+        _ => throw new NotSupportedException($"Unsupported collection type: {t}")
+    };
+
+    public static void DisplayTasksList(IMyCollection<TaskItem> tasks)
     {
         Console.Clear();
         foreach (TaskItem t in tasks) Console.WriteLine($"{t.Id}. {t.Title}");
     }
-    public static void DisplayTasks(MyCollection<TaskItem> tasks)
+    public static void DisplayTasks(IMyCollection<TaskItem> tasks, CollectionType type)
     {
         Console.Clear();
-        MyCollection<TaskItem> todo = new MyCollection<TaskItem>();
-        MyCollection<TaskItem> inProgress = new MyCollection<TaskItem>();
-        MyCollection<TaskItem> done = new MyCollection<TaskItem>();
+        IMyCollection<TaskItem> todo = CreateCollection(type);
+        IMyCollection<TaskItem> inProgress = CreateCollection(type);
+        IMyCollection<TaskItem> done = CreateCollection(type);
 
         foreach (var task in tasks)
         {
@@ -131,7 +138,7 @@ public static class DisplayView
     }
     public static void ViewTaskChilds(int parentId, ITaskService service)
     {
-        MyCollection<TaskItem> childs = service.ApplyFilter(t => t.ParentId == parentId);
+        IMyCollection<TaskItem> childs = service.ApplyFilter(t => t.ParentId == parentId);
 
         if (childs is null || childs.Count <= 0) return;
         Console.WriteLine();
@@ -164,7 +171,7 @@ public static class DisplayView
         Console.ReadKey();
     }
 
-    public static void DisplayUsers(MyCollection<User> users)
+    public static void DisplayUsers(IMyCollection<User> users)
     {
         Console.Clear();
         Console.WriteLine("======= All Users =======");

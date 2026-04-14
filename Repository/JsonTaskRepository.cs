@@ -5,9 +5,9 @@ class JsonTaskRepository : ITaskRepository
     private readonly string _filePath;
     public JsonTaskRepository(string filePath) => _filePath = filePath;
 
-    public MyCollection<TaskItem> LoadTasks()
+    public IMyCollection<TaskItem> LoadTasks()
     {
-        var collection = new MyCollection<TaskItem>();
+        var collection = new IMyCollection<TaskItem>();
 
         if (!File.Exists(_filePath))
             return collection;
@@ -30,7 +30,7 @@ class JsonTaskRepository : ITaskRepository
         return collection;
     }
 
-    public void SaveTasks(MyCollection<TaskItem> tasks)
+    public void SaveTasks(IMyCollection<TaskItem> tasks)
     {
         string json = JsonSerializer.Serialize(tasks.Data, new JsonSerializerOptions
         {

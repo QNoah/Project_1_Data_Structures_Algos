@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-public class MyCollection<T> : IMyCollection<T>
+public class MyLinkedListCollection<T> : IMyCollection<T>
 {
     [JsonIgnore]
     public T[] Items { get; set; }
@@ -56,9 +56,9 @@ public class MyCollection<T> : IMyCollection<T>
         return default;
     }
 
-    public MyCollection<T> Filter(Func<T, bool> predicate)
+    public IMyCollection<T> Filter(Func<T, bool> predicate)
     {
-        MyCollection<T> filtered = new MyCollection<T>();
+        IMyCollection<T> filtered = new MyLinkedListCollection<T>();
         for (int i = 0; i < Count; i++)
         {
             if (predicate(Items[i])) filtered.Add(Items[i]);
@@ -114,6 +114,6 @@ public class MyCollection<T> : IMyCollection<T>
     public IEnumerator<T> GetEnumerator()
     {
         for (int i = 0; i < Count; i++) yield return Items[i];
-    } // Extra foreach lookup.
+    }
     
 }
