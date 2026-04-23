@@ -4,6 +4,7 @@ public static class CollectionFactory
     {
         return type switch
         {
+            CollectionType.HashMap => new HashMap<T>(),
             CollectionType.Array => new MyCollection<T>(),
             CollectionType.LinkedList => new LinkedListCollection<T>(),
             _ => throw new ArgumentException($"Unknown collection type: {type}")

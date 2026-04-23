@@ -1,7 +1,8 @@
 ﻿public enum CollectionType
 {
     LinkedList,
-    Array
+    Array,
+    HashMap
 }
 
 class Program
