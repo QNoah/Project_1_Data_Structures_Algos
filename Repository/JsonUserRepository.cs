@@ -3,11 +3,17 @@ using System.Text.Json;
 class JsonUserRepository : IUserRepository
 {
     private readonly string _filePath;
-    public JsonUserRepository(string filePath) => _filePath = filePath;
+    private readonly CollectionType _collectionType;
 
-    public MyCollection<User> LoadUsers()
+    public JsonUserRepository(string filePath, CollectionType collectionType = CollectionType.Array)
     {
-        var collection = new MyCollection<User>();
+        _filePath = filePath;
+        _collectionType = collectionType;
+    }
+
+    public IMyCollection<User> LoadUsers()
+    {
+        var collection = CollectionFactory.CreateCollection<User>(_collectionType);
 
         if (!File.Exists(_filePath))
             return collection;
@@ -30,9 +36,18 @@ class JsonUserRepository : IUserRepository
         return collection;
     }
 
-    public void SaveUsers(MyCollection<User> users)
+    public void SaveUsers(IMyCollection<User> users)
     {
-        string json = JsonSerializer.Serialize(users.Data, new JsonSerializerOptions
+        // Convert to array for JSON serialization
+        var userArray = new User[users.Count];
+        int index = 0;
+        var iterator = users.GetIterator();
+        while (iterator.HasNext())
+        {
+            userArray[index++] = iterator.Next();
+        }
+
+        string json = JsonSerializer.Serialize(userArray, new JsonSerializerOptions
         {
             WriteIndented = true
         });

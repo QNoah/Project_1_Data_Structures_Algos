@@ -1,6 +1,6 @@
 public interface IUserService
 {
-    MyCollection<User> GetAllUsers();
+    IMyCollection<User> GetAllUsers();
     void AddUser(string name);
     void RemoveUser(int id);
     User GetUserById(int id);

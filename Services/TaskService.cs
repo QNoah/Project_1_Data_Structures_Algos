@@ -4,7 +4,7 @@ using System.Reflection.Metadata.Ecma335;
 public class TaskService : ITaskService
 {
     private readonly ITaskRepository _repository;
-    private readonly MyCollection<TaskItem> _tasks;
+    private readonly IMyCollection<TaskItem> _tasks;
     private readonly IUserService _userService;
 
     public TaskService(ITaskRepository repository, IUserService userService)
@@ -14,7 +14,7 @@ public class TaskService : ITaskService
         _userService = userService;
     }
 
-    public MyCollection<TaskItem> GetAllTasks() => _tasks;
+    public IMyCollection<TaskItem> GetAllTasks() => _tasks;
 
     public TaskItem GetTaskById(int id) => _tasks.FindBy(id, (t, key) => t.Id == key);
 
@@ -108,7 +108,7 @@ public class TaskService : ITaskService
         return true;
     }
 
-    public MyCollection<TaskItem> ApplyFilter(Func<TaskItem, bool> predicate)
+    public IMyCollection<TaskItem> ApplyFilter(Func<TaskItem, bool> predicate)
     {
         return _tasks.Filter(predicate);
     }

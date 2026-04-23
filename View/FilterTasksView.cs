@@ -6,7 +6,7 @@ public static class FilterTasksView
         return Console.ReadLine()!;
     }
 
-    public static MyCollection<TaskItem>? AskFilter(ITaskService service)
+    public static IMyCollection<TaskItem>? AskFilter(ITaskService service)
     {
         while (true)
         {

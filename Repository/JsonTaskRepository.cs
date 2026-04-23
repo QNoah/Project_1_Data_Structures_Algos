@@ -3,11 +3,17 @@ using System.Text.Json;
 class JsonTaskRepository : ITaskRepository
 {
     private readonly string _filePath;
-    public JsonTaskRepository(string filePath) => _filePath = filePath;
+    private readonly CollectionType _collectionType;
 
-    public MyCollection<TaskItem> LoadTasks()
+    public JsonTaskRepository(string filePath, CollectionType collectionType = CollectionType.Array)
     {
-        var collection = new MyCollection<TaskItem>();
+        _filePath = filePath;
+        _collectionType = collectionType;
+    }
+
+    public IMyCollection<TaskItem> LoadTasks()
+    {
+        var collection = CollectionFactory.CreateCollection<TaskItem>(_collectionType);
 
         if (!File.Exists(_filePath))
             return collection;
@@ -30,9 +36,18 @@ class JsonTaskRepository : ITaskRepository
         return collection;
     }
 
-    public void SaveTasks(MyCollection<TaskItem> tasks)
+    public void SaveTasks(IMyCollection<TaskItem> tasks)
     {
-        string json = JsonSerializer.Serialize(tasks.Data, new JsonSerializerOptions
+        // Convert to array for JSON serialization
+        var itemArray = new TaskItem[tasks.Count];
+        int index = 0;
+        var iterator = tasks.GetIterator();
+        while (iterator.HasNext())
+        {
+            itemArray[index++] = iterator.Next();
+        }
+
+        string json = JsonSerializer.Serialize(itemArray, new JsonSerializerOptions
         {
             WriteIndented = true
         });

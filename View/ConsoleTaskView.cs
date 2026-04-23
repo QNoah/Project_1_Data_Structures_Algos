@@ -9,8 +9,8 @@ public class ConsoleTaskView : ITaskView
         _userservice = uservice;
     }
 
-    private MyCollection<TaskItem> _tasks;
-    private MyCollection<User> _users;
+    private IMyCollection<TaskItem> _tasks;
+    private IMyCollection<User> _users;
 
     string Prompt(string prompt)
     {
@@ -203,7 +203,7 @@ public class ConsoleTaskView : ITaskView
                     }
                 case "6":
                     {
-                        MyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_taskservice);
+                        IMyCollection<TaskItem>? filteredTasks = FilterTasksView.AskFilter(_taskservice);
                         if (filteredTasks != null) _tasks = filteredTasks;
                         break;
                     }
