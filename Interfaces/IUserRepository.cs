@@ -1,5 +1,5 @@
 public interface IUserRepository
 {
-    MyCollection<User> LoadUsers();
-    void SaveUsers(MyCollection<User> users);
+    IMyCollection<User> LoadUsers();
+    void SaveUsers(IMyCollection<User> users);
 }

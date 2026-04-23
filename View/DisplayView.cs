@@ -4,14 +4,15 @@ using System.Runtime.InteropServices.Marshalling;
 
 public static class DisplayView
 {
-    public static void DisplayTasksList(MyCollection<TaskItem> tasks)
+    public static void DisplayTasksList(IMyCollection<TaskItem> tasks)
     {
         Console.Clear();
         foreach (TaskItem t in tasks) Console.WriteLine($"{t.Id}. {t.Title}");
     }
-    public static void DisplayTasks(MyCollection<TaskItem> tasks)
+    public static void DisplayTasks(IMyCollection<TaskItem> tasks)
     {
         Console.Clear();
+        Console.WriteLine(tasks); //test
         MyCollection<TaskItem> todo = new MyCollection<TaskItem>();
         MyCollection<TaskItem> inProgress = new MyCollection<TaskItem>();
         MyCollection<TaskItem> done = new MyCollection<TaskItem>();
@@ -131,7 +132,7 @@ public static class DisplayView
     }
     public static void ViewTaskChilds(int parentId, ITaskService service)
     {
-        MyCollection<TaskItem> childs = service.ApplyFilter(t => t.ParentId == parentId);
+        IMyCollection<TaskItem> childs = service.ApplyFilter(t => t.ParentId == parentId);
 
         if (childs is null || childs.Count <= 0) return;
         Console.WriteLine();
@@ -164,7 +165,7 @@ public static class DisplayView
         Console.ReadKey();
     }
 
-    public static void DisplayUsers(MyCollection<User> users)
+    public static void DisplayUsers(IMyCollection<User> users)
     {
         Console.Clear();
         Console.WriteLine("======= All Users =======");

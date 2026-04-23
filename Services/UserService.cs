@@ -4,7 +4,7 @@ using System.Reflection.Metadata.Ecma335;
 public class UserService : IUserService
 {
     private readonly IUserRepository _repository;
-    private readonly MyCollection<User> _users;
+    private readonly IMyCollection<User> _users;
 
     public UserService(IUserRepository repository)
     {
@@ -12,7 +12,7 @@ public class UserService : IUserService
         _users = _repository.LoadUsers();
     }
 
-    public MyCollection<User> GetAllUsers() => _users;
+    public IMyCollection<User> GetAllUsers() => _users;
 
     public User GetUserById(int id) => _users.FindBy(id, (t, key) => t.Id == key);
 
