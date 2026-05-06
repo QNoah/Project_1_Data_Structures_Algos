@@ -2,51 +2,54 @@ using System.Text.Json.Serialization;
 
 public class HashMap<T> : IMyCollection<T> where T : IComparable<T>
 {
-    private readonly SinglyLinkedList<T> _linkedList;
+    private LinkedList<T>[] _buckets;
+    private const double LoadFactorThreshold = 0.75;
 
     [JsonIgnore]
-    public int Count
-    {
-        get
-        {
-            int count = 0;
-            var currentNode = _linkedList.Head;
-            while (currentNode != null)
-            {
-                count++;
-                currentNode = currentNode.Next;
-            }
-            return count;
-        }
-    }
+    public int Count { get; private set; }
 
     public bool Dirty { get; set; }
 
-    public HashMap()
+    public HashMap(int capacity = 16)
     {
-        _linkedList = new SinglyLinkedList<T>();
+        if (capacity < 1) capacity = 16;
+        _buckets = new LinkedList<T>[capacity];
+        Count = 0;
+        Dirty = false;
     }
 
     public void Add(T item)
     {
-        _linkedList.AddLast(item);
+        EnsureCapacity();
+
+        int index = GetBucketIndex(item, _buckets.Length);
+        _buckets[index] ??= new LinkedList<T>();
+
+        if (_buckets[index].Contains(item)) return;
+
+        _buckets[index].AddLast(item);
+        Count++;
         Dirty = true;
     }
 
     public void Remove(T item)
     {
-        _linkedList.Remove(item);
-        Dirty = true;
+        int index = GetBucketIndex(item, _buckets.Length);
+        var bucket = _buckets[index];
+        if (bucket == null) return;
+
+        if (bucket.Remove(item))
+        {
+            Count--;
+            Dirty = true;
+        }
     }
 
     public T FindBy<K>(K key, Func<T, K, bool> comparer)
     {
-        var currentNode = _linkedList.Head;
-        while (currentNode != null)
+        foreach (var item in this)
         {
-            if (comparer(currentNode.Value, key))
-                return currentNode.Value;
-            currentNode = currentNode.Next;
+            if (comparer(item, key)) return item;
         }
         return default;
     }
@@ -54,27 +57,21 @@ public class HashMap<T> : IMyCollection<T> where T : IComparable<T>
     public MyCollection<T> Filter(Func<T, bool> predicate)
     {
         var result = new MyCollection<T>();
-        var currentNode = _linkedList.Head;
-        while (currentNode != null)
+        foreach (var item in this)
         {
-            if (predicate(currentNode.Value))
-                result.Add(currentNode.Value);
-            currentNode = currentNode.Next;
+            if (predicate(item)) result.Add(item);
         }
         return result;
     }
 
     public void Sort(Comparison<T> comparison)
     {
-        // Convert to array, sort, then rebuild linked list
-        var items = ToArray();
-        System.Array.Sort(items, comparison);
+        var arr = ToArray();
+        Array.Sort(arr, comparison);
 
-        _linkedList.Clear();
-        foreach (var item in items)
-        {
-            _linkedList.AddLast(item);
-        }
+        _buckets = new LinkedList<T>[Math.Max(16, _buckets.Length)];
+        Count = 0;
+        foreach (var item in arr) Add(item);
         Dirty = true;
     }
 
@@ -86,72 +83,68 @@ public class HashMap<T> : IMyCollection<T> where T : IComparable<T>
     public R Reduce<R>(R initial, Func<R, T, R> accumulator)
     {
         R result = initial;
-        var currentNode = _linkedList.Head;
-        while (currentNode != null)
+        foreach (var item in this)
         {
-            result = accumulator(result, currentNode.Value);
-            currentNode = currentNode.Next;
+            result = accumulator(result, item);
         }
         return result;
     }
 
     public IMyIterator<T> GetIterator()
     {
-        return new LinkedListIterator(this);
+        return new MyIterator<T>(ToArray(), Count);
     }
 
     public IEnumerator<T> GetEnumerator()
     {
-        var currentNode = _linkedList.Head;
-        while (currentNode != null)
+        for (int i = 0; i < _buckets.Length; i++)
         {
-            yield return currentNode.Value;
-            currentNode = currentNode.Next;
+            var bucket = _buckets[i];
+            if (bucket == null) continue;
+
+            foreach (var item in bucket)
+                yield return item;
         }
     }
 
     private T[] ToArray()
     {
         var result = new T[Count];
-        int index = 0;
-        var currentNode = _linkedList.Head;
-        while (currentNode != null)
-        {
-            result[index++] = currentNode.Value;
-            currentNode = currentNode.Next;
-        }
+        int idx = 0;
+
+        foreach (var item in this)
+            result[idx++] = item;
+
         return result;
     }
 
-    private class LinkedListIterator : IMyIterator<T>
+    private int GetBucketIndex(T item, int bucketCount)
     {
-        private readonly LinkedListCollection<T> _collection;
-        private SingleNode<T> _currentNode;
+        int hash = item?.GetHashCode() ?? 0;
+        return (hash & 0x7fffffff) % bucketCount;
+    }
 
-        public LinkedListIterator(LinkedListCollection<T> collection)
+    private void EnsureCapacity()
+    {
+        if ((double)(Count + 1) / _buckets.Length <= LoadFactorThreshold) return;
+
+        var old = _buckets;
+        _buckets = new LinkedList<T>[old.Length * 2];
+        int oldCount = Count;
+        Count = 0;
+
+        foreach (var bucket in old)
         {
-            _collection = collection;
-            _currentNode = collection._linkedList.Head;
+            if (bucket == null) continue;
+            foreach (var item in bucket)
+            {
+                int idx = GetBucketIndex(item, _buckets.Length);
+                _buckets[idx] ??= new LinkedList<T>();
+                _buckets[idx].AddLast(item);
+                Count++;
+            }
         }
 
-        public bool HasNext()
-        {
-            return _currentNode != null;
-        }
-
-        public T Next()
-        {
-            if (!HasNext())
-                throw new InvalidOperationException("No more elements");
-
-            var value = _currentNode.Value;
-            _currentNode = _currentNode.Next;
-            return value;
-        }
-
-        public void Reset()
-        {
-            _currentNode = _collection._linkedList.Head;
-        }
+        if (Count != oldCount) throw new InvalidOperationException("Rehash failed.");
     }
 }
