@@ -1,7 +1,8 @@
 ﻿public enum CollectionType
 {
     LinkedList,
-    Array
+    Array,
+    HashMap
 }
 
 class Program
@@ -11,6 +12,7 @@ class Program
         Console.WriteLine("Kies datastructuur:");
         Console.WriteLine("1. Array");
         Console.WriteLine("2. LinkedList");
+        Console.WriteLine("3. HashMap");
         Console.Write("Jouw keuze: ");
         string? choice = Console.ReadLine();
 
