@@ -4,6 +4,7 @@ public static class CollectionFactory
     {
         return type switch
         {
+            CollectionType.BinarySearchTree => new BinarySearchTree<T>(),
             CollectionType.HashMap => new HashMap<T>(),
             CollectionType.Array => new MyCollection<T>(),
             CollectionType.LinkedList => new LinkedListCollection<T>(),

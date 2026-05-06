@@ -2,7 +2,8 @@
 {
     LinkedList,
     Array,
-    HashMap
+    HashMap,
+    BinarySearchTree
 }
 
 class Program
@@ -13,11 +14,14 @@ class Program
         Console.WriteLine("1. Array");
         Console.WriteLine("2. LinkedList");
         Console.WriteLine("3. HashMap");
+        Console.WriteLine("4. BinarySearchTree");
         Console.Write("Jouw keuze: ");
         string? choice = Console.ReadLine();
 
         CollectionType collectionType = choice switch
         {
+            "4" => CollectionType.BinarySearchTree,
+            "3" => CollectionType.HashMap,
             "2" => CollectionType.LinkedList,
             _ => CollectionType.Array
         };
