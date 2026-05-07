@@ -66,7 +66,6 @@ public class LinkedListCollection<T> : IMyCollection<T> where T : IComparable<T>
 
     public void Sort(Comparison<T> comparison)
     {
-        // Convert to array, sort, then rebuild linked list
         var items = ToArray();
         System.Array.Sort(items, comparison);
         
@@ -136,7 +135,7 @@ public class LinkedListCollection<T> : IMyCollection<T> where T : IComparable<T>
 
         public bool HasNext()
         {
-            return _currentNode != null;
+            return _currentNode.Next != null;
         }
 
         public T Next()
