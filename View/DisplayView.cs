@@ -102,7 +102,12 @@ public static class DisplayView
             return;
         }
 
-        User user = userService.GetUserById((int)task.UserId);
+        User? user = null;
+        int? userID = task.UserId;
+        if (userID != null)
+        {
+            user = userService.GetUserById((int)userID);
+        }
 
         Console.WriteLine("1. Back");
 
@@ -124,8 +129,7 @@ public static class DisplayView
         Console.WriteLine($"Priority    : {task.Priority}");
         Console.WriteLine($"Status      : {task.Status}");
         Console.WriteLine($"Created At  : {task.CreatedAt}");
-        Console.WriteLine($"Assigned to  : {user.Name}");
-
+        Console.WriteLine($"Assigned to  : {user?.Name ?? "None"}");
         ViewTaskChilds(taskId, taskService);
 
         Console.ReadKey();
