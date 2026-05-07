@@ -68,7 +68,7 @@ public class LinkedListCollection<T> : IMyCollection<T> where T : IComparable<T>
     {
         var items = ToArray();
         System.Array.Sort(items, comparison);
-        
+
         _linkedList.Clear();
         foreach (var item in items)
         {
@@ -142,7 +142,7 @@ public class LinkedListCollection<T> : IMyCollection<T> where T : IComparable<T>
         {
             if (!HasNext())
                 throw new InvalidOperationException("No more elements");
-            
+
             var value = _currentNode.Value;
             _currentNode = _currentNode.Next;
             return value;
